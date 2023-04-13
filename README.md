@@ -5,7 +5,7 @@ NUS Exam Paper Downloader
 
 Simple script to download exam papers from the NUS database. Requires NUSNET login.
 
-Runs on Python 2.7 only.
+Runs on Python 3.9 now!
 
 ### Using via Command Line
 ```
