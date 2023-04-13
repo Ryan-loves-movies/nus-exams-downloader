@@ -3,24 +3,15 @@ from tkinter import filedialog as tkFileDialog
 import subprocess
 import _thread
 import examdownloader
-import os
-from pathlib import Path
 
 FONT = ('Arial', 14, 'bold')
 
-
 class examdownloadergui(object):
     def __init__(self):
-        self.configPath = Path(os.path.expanduser('~') +
-                               "/Library/Application Support/NUS_PYP_Downloader/config.txt")
-        if not self.configPath.exists():
-            self.configPath.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.configPath, "w") as f:
-                f.write("EXXXXXXX\npassword\n/Users/ubuntu/Downloads")
-        with open(self.configPath, "r") as f:
-            self.username, self.password, self.destination = f.readlines()
-            print(self.password)
         self.module = ''
+        self.username = ''
+        self.password = ''
+        self.destination = ''
 
         root = Tk()
         root.withdraw()
@@ -39,8 +30,7 @@ class examdownloadergui(object):
         self.top.columnconfigure(0, weight=1)
         self.top.rowconfigure(0, weight=1)
 
-        titleLabel = Label(self.top, text='NUS PYP Downloader',
-                           font=('Arial', 28, 'bold'))
+        titleLabel = Label(self.top, text='NUS PYP Downloader', font=('Arial', 28, 'bold'))
         titleLabel.grid(row=1, column=0, columnspan=3, padx=20, pady=20)
 
         moduleLabel = Label(self.top, text='Module Code:', font=FONT)
@@ -58,8 +48,7 @@ class examdownloadergui(object):
 
         passwordLabel = Label(self.top, text='Password:', font=FONT)
         passwordLabel.grid(row=4, column=0)
-        self.passwordField = Entry(
-            self.top, bd=2, show='*', textvariable=self.password)
+        self.passwordField = Entry(self.top, bd=2, show='*', textvariable=self.password)
         self.passwordField.insert(0, self.password)
         self.passwordField.grid(row=4, column=1)
 
@@ -68,37 +57,21 @@ class examdownloadergui(object):
         self.destField = Entry(self.top, bd=2, textvariable=self.destination)
         self.destField.insert(0, self.destination)
         self.destField.grid(row=5, column=1)
-        destButton = Button(self.top, text='Choose Folder',
-                            command=self.askForDestination)
+        destButton = Button(self.top, text='Choose Folder', command=self.askForDestination)
         destButton.grid(row=5, column=2)
 
-        self.statusLabel = Label(
-            self.top, text='Brought to you by Oh Shunhao and NUSMods, rtyt version')
+        self.statusLabel = Label(self.top, text='Brought to you by Oh Shunhao and NUSMods')
         self.statusLabel.grid(row=6, columnspan=3, padx=20, pady=20)
 
-        persistButton = Button(self.top, text='Persist configs!',
-                               command=self.persist)
-        persistButton.grid(row=7, column=2, columnspan=3)
-
-        startButton = Button(self.top, text='Start Download!',
-                             command=self.startDownload)
-        startButton.grid(row=7, column=0, columnspan=3)
+        startButton = Button(self.top, text='Start Download!', command=self.startDownload)
+        startButton.grid(row=7, columnspan=3)
 
         root.mainloop()
 
     def askForDestination(self):
-        self.destination = tkFileDialog.askdirectory(
-            mustexist=False, parent=self.top, title='Choose a destination')
+        self.destination = tkFileDialog.askdirectory(mustexist=False, parent=self.top, title='Choose a destination')
         self.destField.delete(0, END)
         self.destField.insert(0, self.destination)
-
-    def persist(self):
-        username = self.usernameField.get().strip("\n")
-        password = self.passwordField.get().strip("\n")
-        base_destination = self.destField.get().strip("\n")
-        with open(self.configPath, "w") as f:
-            f.write("\n".join([username, password, base_destination]))
-        self.updateStatus("Default configs updated", "normal")
 
     def startDownload(self):
         module = self.moduleField.get()
@@ -109,8 +82,7 @@ class examdownloadergui(object):
 
         def downloadCallback(status, lastfile='', numFiles=0):
             if status:
-                self.updateStatus(
-                    str(numFiles) + ' papers downloaded successfully!', 'success')
+                self.updateStatus(str(numFiles) + ' papers downloaded successfully!', 'success')
 #                subprocess.call(['open', '-R', lastfile])
             else:
                 self.updateStatus('Paper not released by Department', 'error')
@@ -118,8 +90,7 @@ class examdownloadergui(object):
         for mod in module.split(','):
             mod = mod.strip()
             destination = f"{base_destination}/{mod}/Past Year Papers"
-            _thread.start_new_thread(
-                ed.getContents, (mod, username, password, destination, downloadCallback, self.updateStatus))
+            _thread.start_new_thread(ed.getContents, (mod, username, password, destination, downloadCallback, self.updateStatus))
 
     def updateStatus(self, msg, type='normal'):
         self.statusLabel['text'] = msg
@@ -129,7 +100,6 @@ class examdownloadergui(object):
             self.statusLabel['fg'] = 'red'
         else:
             self.statusLabel['fg'] = 'blue'
-
 
 if __name__ == '__main__':
     examdownloadergui()
