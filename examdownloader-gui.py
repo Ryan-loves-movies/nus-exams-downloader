@@ -10,8 +10,6 @@ FONT = ('Arial', 14, 'bold')
 class examdownloadergui(object):
     def __init__(self):
         basePath = os.path.dirname(__file__)
-        print(basePath)
-        print(os.listdir(basePath))
         with open(basePath + "/config.txt", "r") as f:
             self.username, self.password, self.destination = f.readlines()
         self.module = ''
