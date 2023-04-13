@@ -11,6 +11,7 @@ FONT = ('Arial', 14, 'bold')
 
 class examdownloadergui(object):
     def __init__(self):
+<<<<<<< HEAD
         self.configPath = Path(os.path.expanduser('~') +
                                "/Library/Application Support/NUS_PYP_Downloader/config.txt")
         if not self.configPath.exists():
@@ -18,6 +19,10 @@ class examdownloadergui(object):
             with open(self.configPath, "w") as f:
                 f.write("EXXXXXXX\npassword\n/Users/ubuntu/Downloads")
         with open(self.configPath, "r") as f:
+=======
+        basePath = os.path.dirname(__file__)
+        with open(basePath + "/config.txt", "r") as f:
+>>>>>>> e7d89e5448eece39323edb5c1c24487fa708656e
             self.username, self.password, self.destination = f.readlines()
             print(self.password)
         self.module = ''
