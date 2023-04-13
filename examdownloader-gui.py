@@ -93,8 +93,8 @@ class examdownloadergui(object):
         self.destField.insert(0, self.destination)
 
     def persist(self):
-        username = self.usernameField.get().strip("\n")
-        password = self.passwordField.get().strip("\n")
+        username = self.usernameField.get().strip("\n") or "E"
+        password = self.passwordField.get().strip("\n") or " "
         base_destination = self.destField.get().strip("\n")
         with open(self.configPath, "w") as f:
             f.write("\n".join([username, password, base_destination]))
